@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Card, CardContent, Typography, Link, Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { useAuthUser } from 'react-auth-kit'
 
 // 강의 정보를 위한 TypeScript 인터페이스 정의
 interface Course {
@@ -94,7 +95,8 @@ const LecturesPage: React.FC = () => {
     // ...기타 강의 데이터
   ]
   const navigate = useNavigate()
-
+  const authUser = useAuthUser()()
+  console.log(authUser)
   return (
     <Box sx={{ width: '100%', bgcolor: 'primary', padding: 2 }}>
       <CourseList courses={courses} />

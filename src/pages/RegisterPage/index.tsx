@@ -1,26 +1,36 @@
 import { Box, Button, Stack, TextField, Typography } from '@mui/material'
-import COLORS from '@src/theme/colors'
-import { useSnackbar } from 'notistack'
+import { type RegisterAPIBody, useRegister } from '@src/hooks/api/authHooks'
 import { useEffect, useState } from 'react'
 
 const RegisterPage = () => {
-  const [id, setId] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordCheck, setPasswordCheck] = useState('')
-  const [role, setRole] = useState('' as 'student' | 'professor' | '')
-  const { enqueueSnackbar } = useSnackbar()
+  // const [value, setValue] = useState<RegisterAPIBody>({
+  //   username: null,
+  //   password: null,
+  //   role: null,
+  //   name: null
+  // })
 
-  const handleSubmit = () => {
-    console.log('hi')
-    if (password === passwordCheck) {
-      enqueueSnackbar('비밀번호가 일치합니다.', { variant: 'success' })
-    } else {
-      enqueueSnackbar('비밀번호가 일치하지 않습니다.', { variant: 'error' })
-    }
+  const [username, setUsername] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [role, setRole] = useState<string>('')
+  const [name, setName] = useState<string>('')
+
+  const registerMutation = useRegister({ username, password, role, name })
+  // const handleChange: React.ChangeEventHandler<HTMLInputElement> = event => {
+  //   const newValues = {
+  //     ...value,
+  //     [event.target.name]: event.target.value
+  //   }
+  //   setValue(newValues)
+  // }
+
+  const handleClickButton = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setRole(e.currentTarget.id)
   }
-  const handlleClickRole = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const role = e.currentTarget.id
-    setRole(role as 'student' | 'professor')
+
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
+    registerMutation.mutate()
   }
   return (
     <Box
@@ -43,7 +53,7 @@ const RegisterPage = () => {
           height: 500,
           borderRadius: 10,
           gap: 2,
-          padding: 6
+          padding: 4
         }}
       >
         <Typography variant="h4" fontSize={20} fontWeight={800} color="text.primary">
@@ -52,10 +62,17 @@ const RegisterPage = () => {
         <Stack direction="column" spacing={2} width="100%">
           <TextField
             variant="outlined"
-            label="아이디"
-            value={id}
+            label="이름"
+            value={name}
             sx={{ width: '100%' }}
-            onChange={e => setId(e.target.value)}
+            onChange={e => setName(e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            label="아이디"
+            value={username}
+            sx={{ width: '100%' }}
+            onChange={e => setUsername(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -64,14 +81,6 @@ const RegisterPage = () => {
             value={password}
             sx={{ width: '100%' }}
             onChange={e => setPassword(e.target.value)}
-          />
-          <TextField
-            variant="outlined"
-            label="비밀번호 확인"
-            type="password"
-            value={passwordCheck}
-            sx={{ width: '100%' }}
-            onChange={e => setPasswordCheck(e.target.value)}
           />
         </Stack>
         <Stack direction="row" gap={2}>
@@ -83,7 +92,7 @@ const RegisterPage = () => {
               backgroundColor: role === 'student' ? 'primary.light' : '',
               color: role === 'student' ? 'text.primary' : 'text.secondary'
             }}
-            onClick={handlleClickRole}
+            onClick={handleClickButton}
           >
             <Typography variant="body1" fontSize={18} fontWeight={800}>
               학생
@@ -97,7 +106,7 @@ const RegisterPage = () => {
               backgroundColor: role === 'professor' ? 'primary.light' : '',
               color: role === 'professor' ? 'text.primary' : 'text.secondary'
             }}
-            onClick={handlleClickRole}
+            onClick={handleClickButton}
           >
             <Typography variant="body1" fontSize={18} fontWeight={800}>
               교수
@@ -107,6 +116,7 @@ const RegisterPage = () => {
         <Button
           variant="outlined"
           sx={{ width: '100%', height: 50, backgroundColor: 'primary.dark', color: 'primary.light' }}
+          onClick={handleSubmit}
         >
           <Typography variant="body1" fontSize={18} fontWeight={800}>
             회원가입

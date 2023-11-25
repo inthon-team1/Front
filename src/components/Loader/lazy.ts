@@ -1,8 +1,8 @@
 import { lazy } from 'react'
 import Loader from '.'
 
-// export const MainPage = Loader(lazy(() => import('@src/pages/HomePage')))
 export const Navigation = Loader(lazy(() => import('src/components/Navigation')))
+export const HomePage = Loader(lazy(() => import('@src/pages/HomePage')))
 export const LecturesPage = Loader(lazy(() => import('@src/pages/LecturesPage')))
 export const LoginPage = Loader(lazy(() => import('@src/pages/LoginPage')))
 export const RegisterPage = Loader(lazy(() => import('@src/pages/RegisterPage')))
