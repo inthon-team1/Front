@@ -5,7 +5,7 @@ import {
   LecturesPage,
   RegisterPage,
   LectureRegisterPage,
-  LectureOpenPage
+  LectureOpenPage,
   HomePage
   //   IntroductionPage,
   //   NotFoundPage
