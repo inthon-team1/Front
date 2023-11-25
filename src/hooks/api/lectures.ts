@@ -38,10 +38,11 @@ export const createLectureAPICall = async (token: string, values: KoreanLecture)
 export const useCreateLecture = (values: KoreanLecture) => {
   const { enqueueSnackbar } = useSnackbar()
   const token = useAuthHeader()()
-
+  const queryClient = useQueryClient()
   return useMutation(['lecture'], () => createLectureAPICall(token, values), {
     onSuccess: () => {
       enqueueSnackbar(LECTURE_MESSAGE.SUCCESS, { variant: 'success' })
+      queryClient.invalidateQueries('lecture')
     },
     onError: err => {
       if (err instanceof AxiosError) {
@@ -79,6 +80,33 @@ export const useDeleteLecture = (): UseMutationResult<void, unknown, string, voi
     },
     onSettled: () => {
       queryClient.invalidateQueries('conferences')
+    }
+  })
+}
+
+export const createRegisterLectureAPICall = async (token: string, id: string) => {
+  await axios.post<KoreanLecture>(
+    `${import.meta.env.VITE_API}/lecture/join`,
+    { key: id },
+    {
+      headers: { Authorization: token }
+    }
+  )
+}
+
+export const useCreateRegisterLecture = (id: string) => {
+  const { enqueueSnackbar } = useSnackbar()
+  const token = useAuthHeader()()
+  return useMutation(['lecture'], () => createRegisterLectureAPICall(token, id), {
+    onSuccess: () => {
+      enqueueSnackbar(LECTURE_MESSAGE.SUCCESS, { variant: 'success' })
+    },
+    onError: err => {
+      if (err instanceof AxiosError) {
+        enqueueSnackbar(LECTURE_MESSAGE.FAILURE, { variant: 'error' })
+        return
+      }
+      enqueueSnackbar(COMMON_MESSAGE.UNKNOWN_ERROR, { variant: 'error' })
     }
   })
 }

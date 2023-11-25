@@ -1,7 +1,9 @@
 import { Box, Card, CardActionArea, CardContent, Stack, Typography } from '@mui/material'
-import React from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const CoursePage = () => {
+  const navigate = useNavigate()
+  const { courseID, id } = useParams()
   return (
     <Box
       sx={{
@@ -24,6 +26,7 @@ const CoursePage = () => {
             alignItems: 'center',
             backgroundColor: 'primary.main'
           }}
+          onClick={() => navigate(`/course/${courseID}/chat/${id}`)}
         >
           <CardActionArea>
             <CardContent>
