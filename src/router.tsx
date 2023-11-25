@@ -5,6 +5,7 @@ import {
   LecturesPage,
   RegisterPage,
   LectureRegisterPage,
+  LectureOpenPage
   HomePage
   //   IntroductionPage,
   //   NotFoundPage
@@ -40,6 +41,10 @@ const routes: RouteObject[] = [
       {
         path: '/course/register',
         element: <LectureRegisterPage />
+      },
+      {
+        path: '/course/open',
+        element: <LectureOpenPage />
       }
     ]
   }
