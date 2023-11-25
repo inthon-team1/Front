@@ -32,7 +32,7 @@ const LectureRegisterPage: React.FC = () => {
         강의 등록
       </Typography>
       <TextField
-        label="해쉬 코드"
+        label="강의 코드"
         variant="outlined"
         value={hash}
         onChange={handleHashChange}
