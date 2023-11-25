@@ -3,9 +3,9 @@ import {
   //   MainPage,
   Navigation,
   LecturesPage,
-  LoginPage,
   RegisterPage,
-  LectureRegisterPage
+  LectureRegisterPage,
+  HomePage
   //   IntroductionPage,
   //   NotFoundPage
 } from '@components/Loader/lazy'
@@ -16,17 +16,14 @@ const routes: RouteObject[] = [
     element: <Navigation />,
     children: [
       {
-        path: '',
-        element: <LoginPage />
+        path: '/',
+        element: <HomePage />
       },
       {
         path: '/register',
         element: <RegisterPage />
       },
-      {
-        path: '/lectures',
-        element: <LecturesPage />
-      },
+
       // {
       //   path: '/location',
       //   element: <LocationPage />

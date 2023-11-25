@@ -1,16 +1,24 @@
 import { Box, Button, Stack, TextField, Typography } from '@mui/material'
+import { useLogin } from '@src/hooks/api/authHooks'
 import COLORS from '@src/theme/colors'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const LoginPage = () => {
-  const [id, setId] = useState('')
-  const [password, setPassword] = useState('')
   const navigate = useNavigate()
-  const handleLogin = () => {}
   const handleNavigateRegister = () => {
     navigate('/register')
   }
+
+  const [username, setUsername] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const loginMutation = useLogin({ username, password })
+
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
+    loginMutation.mutate()
+  }
+
   return (
     <Box
       sx={{
@@ -32,7 +40,7 @@ const LoginPage = () => {
           height: 500,
           borderRadius: 10,
           gap: 2,
-          padding: 6
+          padding: 4
         }}
       >
         <Typography variant="h4" fontSize={20} fontWeight={800} color="text.primary" sx={{ mb: 8 }}>
@@ -42,20 +50,21 @@ const LoginPage = () => {
           <TextField
             variant="outlined"
             label="id"
-            value={id}
+            value={username}
             sx={{ width: '100%' }}
-            onChange={e => setId(e.target.value)}
+            onChange={e => setUsername(e.target.value)}
           />
           <TextField
             variant="outlined"
             label="password"
+            type="password"
             value={password}
             sx={{ width: '100%' }}
             onChange={e => setPassword(e.target.value)}
           />
         </Stack>
         <Stack direction="row" spacing={2} width="100%">
-          <Button variant="text" sx={{ width: '100%', color: COLORS.text }}>
+          <Button variant="text" sx={{ width: '100%', color: COLORS.text }} onClick={e => handleSubmit(e)}>
             <Typography variant="body1" fontSize={18} fontWeight={800}>
               로그인
             </Typography>
