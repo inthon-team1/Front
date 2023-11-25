@@ -24,7 +24,7 @@ const App = () => {
       },
       palette: {
         primary: {
-          main: '#D4E5EF',
+          main: '#59A7FF',
           light: '#ECF2FF',
           dark: '#4570EA'
         },

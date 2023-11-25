@@ -9,6 +9,7 @@ const ThemeWrapper = styled(Box)(
         display: block;
         flex: 1;
         min-width: 0;
+        background: linear-gradient(180deg, #FFFFFF 30%, #D4E5EF 90%);
     `
 )
 

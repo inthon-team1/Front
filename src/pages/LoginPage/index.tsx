@@ -35,7 +35,9 @@ const LoginPage = () => {
           flexDirection: 'column',
           justifyContent: 'flex-start',
           alignItems: 'center',
-          backgroundColor: 'primary.main',
+          backdropFilter: 'blur(25px) saturate(200%)',
+          '::WebkitBackdrop': 'blur(25px) saturate(200%)',
+          backgroundColor: 'rgba(255, 255, 255, 0.58)',
           width: 450,
           height: 500,
           borderRadius: 10,
@@ -61,6 +63,9 @@ const LoginPage = () => {
             value={password}
             sx={{ width: '100%' }}
             onChange={e => setPassword(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') loginMutation.mutate()
+            }}
           />
         </Stack>
         <Stack direction="row" spacing={2} width="100%">

@@ -30,7 +30,7 @@ const Header = () => {
         <img src={logoUrl} alt="logo" width="50" height="50" />
       </Button>
       {authUser && (
-        <Button variant="contained" sx={{ display: 'flex' }} onClick={() => signOut()}>
+        <Button sx={{ display: 'flex', backgroundColor: '#59A7FF', color: 'white' }} onClick={() => signOut()}>
           <Typography variant="body1" fontSize={15} fontWeight={800}>
             로그아웃
           </Typography>
