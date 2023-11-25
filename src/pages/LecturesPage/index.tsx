@@ -1,21 +1,30 @@
-import React from 'react';
-import { Box, Card, CardContent, Typography, Link, Button } from '@mui/material';
+import React from 'react'
+import { Box, Card, CardContent, Typography, Link, Button } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 // 강의 정보를 위한 TypeScript 인터페이스 정의
 interface Course {
-  id: string;
-  year: string;    // 연도
-  code: string;    // 학수번호
-  title: string;   // 수업 이름
-  section: string; // 분반
-  professor: string; // 담당 교수 이름
-  link: string;    // 강의 상세 정보로의 링크
+  id: string
+  year: string // 연도
+  code: string // 학수번호
+  title: string // 수업 이름
+  section: string // 분반
+  professor: string // 담당 교수 이름
+  link: string // 강의 상세 정보로의 링크
 }
 
 // 강의 아이템 컴포넌트
 const CourseItem: React.FC<{ course: Course }> = ({ course }) => {
   return (
-    <Card sx={{ width: 800, /*backgroundColor: 'white',*/ marginY: 1, boxShadow: 1, border: '1px solid black', marginX: 'auto' }}>
+    <Card
+      sx={{
+        width: 800,
+        /*backgroundColor: 'white',*/ marginY: 1,
+        boxShadow: 1,
+        border: '1px solid black',
+        marginX: 'auto'
+      }}
+    >
       <CardContent>
         {/* 연도와 학수번호를 나타내는 링크 */}
         <Link href={course.link} color="text.primary" underline="none">
@@ -35,32 +44,31 @@ const CourseItem: React.FC<{ course: Course }> = ({ course }) => {
         </Typography>
       </CardContent>
     </Card>
-  );
-};
-
+  )
+}
 
 // 강의 목록 컴포넌트
 const CourseList: React.FC<{ courses: Course[] }> = ({ courses }) => {
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: 4 }}>
-      {courses.map((course) => (
+      {courses.map(course => (
         <CourseItem key={course.id} course={course} />
       ))}
     </Box>
-  );
-};
+  )
+}
 
 const goToRegistrationPage = () => {
   // 여기에 강의 등록 페이지 URL을 넣습니다.
-  const registrationUrl = '/Register-CoursePage';
-  window.location.href = registrationUrl;
-};
+  const registrationUrl = '/Register-CoursePage'
+  window.location.href = registrationUrl
+}
 
 const goToCreatePage = () => {
   // 여기에 강의 개설 페이지 URL을 넣습니다.
-  const createUrl = '/create-courses';
-  window.location.href = createUrl;
-};
+  const createUrl = '/create-courses'
+  window.location.href = createUrl
+}
 
 // LecturesPage 컴포넌트
 const LecturesPage: React.FC = () => {
@@ -82,21 +90,21 @@ const LecturesPage: React.FC = () => {
       section: '02분반',
       professor: '박성빈',
       link: '/courses/34'
-    },
+    }
     // ...기타 강의 데이터
-  ];
-  
+  ]
+  const navigate = useNavigate()
 
   return (
     <Box sx={{ width: '100%', bgcolor: 'primary', padding: 2 }}>
       <CourseList courses={courses} />
-      <Box sx={{ display: 'flex', justifyContent: 'center',  marginTop: 4 }}>
-        <Button variant="contained" color="primary" onClick={goToRegistrationPage}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+        <Button variant="contained" color="primary" onClick={() => navigate('/course/register')}>
           강의 등록
         </Button>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default LecturesPage;
+export default LecturesPage
