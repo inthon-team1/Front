@@ -4,11 +4,11 @@ import {
   Navigation,
   LecturesPage,
   LoginPage,
-  RegisterPage
+  RegisterPage,
+  LectureRegisterPage
   //   IntroductionPage,
   //   NotFoundPage
 } from '@components/Loader/lazy'
-import RegistrationPage from './pages/RegistrationPage'
 
 const routes: RouteObject[] = [
   {
@@ -41,8 +41,8 @@ const routes: RouteObject[] = [
       //   element: <NotFoundPage />
       // }
       {
-         path: '/Register-CoursePage',
-         element: <RegistrationPage />
+        path: '/course/register',
+        element: <LectureRegisterPage />
       }
     ]
   }

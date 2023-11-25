@@ -135,8 +135,6 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {content}
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         {/* <LocalizationProvider dateAdapter={AdapterDateFns}> */}
