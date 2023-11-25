@@ -1,28 +1,15 @@
-import { Box, Tab, Tabs } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import NavigationPaths from '@constants/navigation'
-import { handleTabsDefault } from '@utils/tabsIndicator'
 import { ReactComponent as Logo } from '@assets/Logo.svg'
+import { useAuthUser, useSignOut } from 'react-auth-kit'
+import logoUrl from '@assets/Logo.svg'
 const Header = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const main = location.pathname === '/'
   const register = location.pathname === '/register'
-  const [currentTab, setCurrentTab] = useState(handleTabsDefault(location.pathname))
-
-  useEffect(() => {
-    setCurrentTab(NavigationPaths.findIndex(page => page.path === location.pathname))
-  }, [location.pathname])
-
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setCurrentTab(newValue)
-    navigate(NavigationPaths[newValue].path)
-  }
-
-  // const handleClickLogo = () => {
-  //   setCurrentTab(0)
-  // }
+  const authUser = useAuthUser()()
+  const signOut = useSignOut()
 
   return (
     <Box
@@ -31,32 +18,24 @@ const Header = () => {
         top: 0,
         display: 'flex',
         width: '100vw',
+        justifyContent: 'space-between',
         alignItems: 'center',
         zIndex: 6,
-        height: '5vh'
+        height: 70,
+        paddingX: 30,
+        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)'
       }}
     >
-      <Tabs
-        textColor={'inherit'}
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '100vw',
-          height: 89,
-          paddingX: 25,
-          background: main || register ? '#ffffff' : '#D4E5EF',
-          borderBottom: 1
-        }}
-        value={currentTab}
-        onChange={handleChange}
-        TabIndicatorProps={{ sx: { display: 'none' } }}
-      >
-        {/* <Logo width={1} height={1} /> */}
-        {NavigationPaths.map((navbar, index) => (
-          <Tab sx={{ disaply: 'flex', alignSelf: 'center' }} key={index} label={navbar.name} value={index} />
-        ))}
-      </Tabs>
+      <Button sx={{ display: 'flex', alignItems: 'center' }} onClick={() => navigate('/')}>
+        <img src={logoUrl} alt="logo" width="50" height="50" />
+      </Button>
+      {authUser && (
+        <Button variant="contained" sx={{ display: 'flex' }} onClick={() => signOut()}>
+          <Typography variant="body1" fontSize={15} fontWeight={800}>
+            로그아웃
+          </Typography>
+        </Button>
+      )}
     </Box>
   )
 }
