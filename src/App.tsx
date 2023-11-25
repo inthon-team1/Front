@@ -1,30 +1,85 @@
-import { useState } from 'react'
-import viteLogo from '/vite.svg'
-import reactLogo from '@assets/react.svg'
-import './App.css'
+import { useLocation, useRoutes } from 'react-router-dom'
+import router from './router'
+import { CssBaseline, ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material'
+import COLORS from 'src/theme/colors'
+// import PretendardVariable from '@src/assets/fonts/PretendardVariable.ttf'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const content = useRoutes(router)
+  const location = useLocation()
+
+  const mainColor = location.pathname === '/' ? COLORS.primary : COLORS.antiPrimary
+  const antiColor = location.pathname === '/' ? COLORS.antiPrimary : COLORS.primary
+
+  const theme = responsiveFontSizes(
+    createTheme({
+      typography: {
+        fontFamily: 'Pretendard-Regular'
+      },
+      palette: {
+        primary: {
+          main: COLORS.primary,
+          contrastText: COLORS.antiPrimary
+        },
+        secondary: {
+          main: COLORS.secondary,
+          contrastText: COLORS.antiSecondary,
+          light: COLORS.textHover
+        },
+        text: {
+          primary: COLORS.text,
+          secondary: COLORS.transparentText
+        },
+        background: {
+          default: COLORS.primary,
+          paper: COLORS.antibackground
+        }
+      },
+      components: {
+        MuiCssBaseline: {
+          styleOverrides: `
+          @font-face {
+            font-family: 'Pretendard-Regular';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+          `
+        },
+        // MuiTabs: {
+        //   styleOverrides: {
+        //     indicator: {
+        //       backgroundColor: mainColor
+        //     },
+        //     root: {
+        //       color: mainColor
+        //     }
+        //   }
+        // },
+        // MuiTypography: {
+        //   styleOverrides: {
+        //     root: {
+        //       color: mainColor
+        //     }
+        //   }
+        // },
+        MuiDrawer: {
+          styleOverrides: {
+            paper: {
+              backgroundColor: antiColor,
+              color: mainColor
+            }
+          }
+        }
+      }
+    })
+  )
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount(count => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      {content}
+    </ThemeProvider>
   )
 }
 
