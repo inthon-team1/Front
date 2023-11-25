@@ -7,6 +7,7 @@ import {
   //   IntroductionPage,
   //   NotFoundPage
 } from '@components/Loader/lazy'
+import RegistrationPage from './pages/RegistrationPage'
 
 const routes: RouteObject[] = [
   {
@@ -20,7 +21,7 @@ const routes: RouteObject[] = [
       {
         path: '/lectures',
         element: <LecturesPage />
-      }
+      },
       // {
       //   path: '/location',
       //   element: <LocationPage />
@@ -34,6 +35,10 @@ const routes: RouteObject[] = [
       //   path: '/*',
       //   element: <NotFoundPage />
       // }
+      {
+         path: '/Register-CoursePage',
+         element: <RegistrationPage />
+      }
     ]
   }
 ]
