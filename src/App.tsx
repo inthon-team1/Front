@@ -1,16 +1,22 @@
-import { useLocation, useRoutes } from 'react-router-dom'
+import { useRoutes } from 'react-router-dom'
 import router from './router'
 import { CssBaseline, ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material'
 import COLORS from 'src/theme/colors'
-// import PretendardVariable from '@src/assets/fonts/PretendardVariable.ttf'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
+import { SnackbarProvider } from 'notistack'
+import { AuthProvider } from 'react-auth-kit'
 
 const App = () => {
   const content = useRoutes(router)
-  const location = useLocation()
-
-  const mainColor = location.pathname === '/' ? COLORS.primary : COLORS.antiPrimary
-  const antiColor = location.pathname === '/' ? COLORS.antiPrimary : COLORS.primary
-
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: 1
+      }
+    }
+  })
   const theme = responsiveFontSizes(
     createTheme({
       typography: {
@@ -18,22 +24,57 @@ const App = () => {
       },
       palette: {
         primary: {
-          main: COLORS.primary,
-          contrastText: COLORS.antiPrimary
+          main: '#D4E5EF',
+          light: '#ECF2FF',
+          dark: '#4570EA'
         },
         secondary: {
-          main: COLORS.secondary,
-          contrastText: COLORS.antiSecondary,
-          light: COLORS.textHover
+          main: '#49BEFF',
+          light: '#E8F7FF',
+          dark: '#23afdb'
+        },
+        success: {
+          main: '#13DEB9',
+          light: '#E6FFFA',
+          dark: '#02b3a9',
+          contrastText: '#ffffff'
+        },
+        info: {
+          main: '#539BFF',
+          light: '#EBF3FE',
+          dark: '#1682d4',
+          contrastText: '#ffffff'
+        },
+        error: {
+          main: '#FA896B',
+          light: '#FDEDE8',
+          dark: '#f3704d',
+          contrastText: '#ffffff'
+        },
+        warning: {
+          main: '#FFAE1F',
+          light: '#FEF5E5',
+          dark: '#ae8e59',
+          contrastText: '#ffffff'
+        },
+        grey: {
+          100: '#F2F6FA',
+          200: '#EAEFF4',
+          300: '#DFE5EF',
+          400: '#7C8FAC',
+          500: '#5A6A85',
+          600: '#2A3547'
         },
         text: {
-          primary: COLORS.text,
-          secondary: COLORS.transparentText
+          primary: '#2A3547',
+          secondary: '#5A6A85'
         },
-        background: {
-          default: COLORS.primary,
-          paper: COLORS.antibackground
-        }
+        action: {
+          disabledBackground: 'rgba(73,82,88,0.12)',
+          hoverOpacity: 0.02,
+          hover: '#f6f9fc'
+        },
+        divider: '#e5eaef'
       },
       components: {
         MuiCssBaseline: {
@@ -46,6 +87,31 @@ const App = () => {
         }
           `
         },
+        MuiInputLabel: {
+          styleOverrides: {
+            root: {
+              color: COLORS.text
+            }
+          }
+        },
+        MuiTextField: {
+          styleOverrides: {
+            root: {
+              '--TextField-brandBorderColor': '#E0E3E7',
+              '--TextField-brandBorderHoverColor': '#B2BAC2',
+              '--TextField-brandBorderFocusedColor': '#6F7E8C',
+              '& label.Mui-focused': {
+                color: 'var(--TextField-brandBorderFocusedColor)'
+              }
+              // '& .MuiOutlinedInput-notchedOutline': {
+              //   borderColor: COLORS.primary // Change 'blue' to the desired color
+              // },
+              // '&:hover .MuiOutlinedInput-notchedOutline': {
+              //   borderColor: COLORS.textHover // Change 'green' to the desired hover color: ;
+              // }
+            }
+          }
+        }
         // MuiTabs: {
         //   styleOverrides: {
         //     indicator: {
@@ -63,14 +129,6 @@ const App = () => {
         //     }
         //   }
         // },
-        MuiDrawer: {
-          styleOverrides: {
-            paper: {
-              backgroundColor: antiColor,
-              color: mainColor
-            }
-          }
-        }
       }
     })
   )
@@ -79,6 +137,17 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {content}
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <LocalizationProvider dateAdapter={AdapterDateFns}> */}
+        <SnackbarProvider maxSnack={3} anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}>
+          <AuthProvider authType="localstorage" authName={'_auth'}>
+            <CssBaseline />
+            {content}
+          </AuthProvider>
+        </SnackbarProvider>
+        {/* </LocalizationProvider> */}
+      </QueryClientProvider>
     </ThemeProvider>
   )
 }

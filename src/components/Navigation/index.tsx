@@ -13,16 +13,10 @@ const ThemeWrapper = styled(Box)(
 )
 
 const Navigation = () => {
-  const theme = useTheme()
-  const location = useLocation()
-
-  const mainPage = location.pathname === '/'
-
   return (
     <Box
       sx={{
         position: 'relative',
-        backgroundColor: mainPage ? theme.palette.background.default : theme.palette.background.paper,
         margin: 0,
         padding: 0,
         overflow: 'hidden',
@@ -35,8 +29,8 @@ const Navigation = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center'
+          justifyContent: 'space-between',
+          alignItems: 'space-between'
         }}
       >
         <Header />
