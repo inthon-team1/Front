@@ -1,5 +1,4 @@
 import { Box, Tab, Tabs } from '@mui/material'
-import HeaderTabs from './HeaderTabs'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import NavigationPaths from '@constants/navigation'
@@ -9,6 +8,7 @@ const Header = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const main = location.pathname === '/'
+  const register = location.pathname === '/register'
   const [currentTab, setCurrentTab] = useState(handleTabsDefault(location.pathname))
 
   useEffect(() => {
@@ -20,9 +20,9 @@ const Header = () => {
     navigate(NavigationPaths[newValue].path)
   }
 
-  const handleClickLogo = () => {
-    setCurrentTab(0)
-  }
+  // const handleClickLogo = () => {
+  //   setCurrentTab(0)
+  // }
 
   return (
     <Box
@@ -45,7 +45,7 @@ const Header = () => {
           width: '100vw',
           height: 89,
           paddingX: 25,
-          background: main ? '#ffffff' : '#D4E5EF',
+          background: main || register ? '#ffffff' : '#D4E5EF',
           borderBottom: 1
         }}
         value={currentTab}
@@ -54,7 +54,7 @@ const Header = () => {
       >
         {/* <Logo width={1} height={1} /> */}
         {NavigationPaths.map((navbar, index) => (
-          <Tab key={index} label={navbar.name} value={index} />
+          <Tab sx={{ disaply: 'flex', alignSelf: 'center' }} key={index} label={navbar.name} value={index} />
         ))}
       </Tabs>
     </Box>
