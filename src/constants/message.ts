@@ -21,3 +21,9 @@ export const AUTH_REGISTER_MESSAGE = {
   SERVER_ERROR: '서버에서 오류가 발생한 것 같아요. 다시 시도해주세요',
   UNKNOWN_ERROR: '알 수 없는 오류가 발생했습니다:( 다시 시도해주세요'
 }
+
+export const LECTURE_MESSAGE = {
+  SUCCESS: '강의가 등록되었습니다.',
+  FAILURE: '강의 등록에 실패했습니다.',
+  DELETE_SUCCESS: '강의가 삭제되었습니다.'
+}

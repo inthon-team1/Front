@@ -13,6 +13,15 @@ export interface Lecture {
   section: number
 }
 
+export interface KoreanLecture {
+  titleKR: string
+  descriptionKR: string
+  courseID: string
+  year: number
+  semester: number
+  section: number
+}
+
 export interface LectureAPIResponse extends AxiosResponse {
   lectures: Lecture[]
 }
