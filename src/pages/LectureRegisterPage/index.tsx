@@ -26,22 +26,42 @@ const LectureRegisterPage: React.FC = () => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh'
+        height: '90vh'
       }}
     >
-      <Typography variant="h4" sx={{ marginBottom: 4 }}>
-        강의 등록
-      </Typography>
-      <TextField
-        label="강의 코드"
-        variant="outlined"
-        value={hash}
-        onChange={handleHashChange}
-        sx={{ marginBottom: 2 }}
-      />
-      <Button variant="contained" color="primary" onClick={handleRegister}>
-        등록
-      </Button>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: 500,
+          height: 300,
+          borderRadius: 3,
+          backdropFilter: 'blur(16px) saturate(200%)',
+          '::WebkitBackdrop': 'blur(16px) saturate(200%)',
+          backgroundColor: 'rgba(255, 255, 255, 0.4)',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Typography variant="h4" sx={{ marginBottom: 4 }}>
+          강의 등록
+        </Typography>
+        <TextField
+          label="강의 코드"
+          variant="outlined"
+          value={hash}
+          onChange={handleHashChange}
+          sx={{ marginBottom: 2 }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ backgroundColor: '#59A7FF', color: 'white', padding: 1, gap: 1 }}
+          onClick={handleRegister}
+        >
+          등록
+        </Button>
+      </Box>
     </Box>
   )
 }

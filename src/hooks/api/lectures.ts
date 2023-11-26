@@ -1,10 +1,10 @@
 import { COMMON_MESSAGE, LECTURE_MESSAGE } from '@src/constants/message'
 import { type KoreanLecture, type LectureAPIResponse } from '@src/models/lecture'
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios, { AxiosError, type AxiosResponse } from 'axios'
 import { useSnackbar } from 'notistack'
 import { useAuthHeader } from 'react-auth-kit'
 
-import { UseMutationResult, useMutation, useQuery, useQueryClient } from 'react-query'
+import { type UseMutationResult, useMutation, useQuery, useQueryClient } from 'react-query'
 
 export const getLecturesAPICall = async (token: string) => {
   const response = await axios.get<LectureAPIResponse>(`${import.meta.env.VITE_API}/lecture`, {

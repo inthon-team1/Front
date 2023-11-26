@@ -1,6 +1,6 @@
-import { Box, styled, useTheme } from '@mui/material'
+import { Box, styled } from '@mui/material'
 import Header from './Header'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
 const ThemeWrapper = styled(Box)(
   () => `

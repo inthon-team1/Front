@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, TextField, Button, Typography, Stack } from '@mui/material'
+import { Box, TextField, Button, Typography } from '@mui/material'
 import { useCreateLecture } from '@src/hooks/api/lectures'
 import { useNavigate } from 'react-router-dom'
 
@@ -13,16 +13,12 @@ const CreateCoursePage: React.FC = () => {
     semester: 0,
     section: 0
   })
-  // 교수의 이름은 인증 시스템으로부터 받거나 상태로 관리할 수 있습니다.
-  // 여기서는 예시로 고정된 값을 사용합니다.
+
   const openCourseMutation = useCreateLecture(value)
-  // 폼 제출을 처리하는 함수
   const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault() // 폼 제출 기본 동작 방지
+    event.preventDefault()
     openCourseMutation.mutate()
     navigate('/')
-    // 폼 데이터를 서버에 제출하는 로직을 구현합니다.
-    // 예: axios.post('/api/create-course', { courseTitle, courseDescription, courseCode, professorName }).then(...);
   }
 
   return (

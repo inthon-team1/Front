@@ -1,28 +1,15 @@
 import { Box, Button, Stack, TextField, Typography } from '@mui/material'
-import { type RegisterAPIBody, useRegister } from '@src/hooks/api/authHooks'
-import { useEffect, useState } from 'react'
+import { useRegister } from '@src/hooks/api/authHooks'
+import COLORS from '@src/theme/colors'
+import { useState } from 'react'
 
 const RegisterPage = () => {
-  // const [value, setValue] = useState<RegisterAPIBody>({
-  //   username: null,
-  //   password: null,
-  //   role: null,
-  //   name: null
-  // })
-
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [role, setRole] = useState<string>('')
   const [name, setName] = useState<string>('')
 
   const registerMutation = useRegister({ username, password, role, name })
-  // const handleChange: React.ChangeEventHandler<HTMLInputElement> = event => {
-  //   const newValues = {
-  //     ...value,
-  //     [event.target.name]: event.target.value
-  //   }
-  //   setValue(newValues)
-  // }
 
   const handleClickButton = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setRole(e.currentTarget.id)
@@ -48,7 +35,9 @@ const RegisterPage = () => {
           flexDirection: 'column',
           justifyContent: 'flex-start',
           alignItems: 'center',
-          backgroundColor: 'primary.main',
+          backdropFilter: 'blur(25px) saturate(200%)',
+          '::WebkitBackdrop': 'blur(25px) saturate(200%)',
+          backgroundColor: 'rgba(255, 255, 255, 0.58)',
           width: 450,
           height: 500,
           borderRadius: 10,
@@ -89,8 +78,11 @@ const RegisterPage = () => {
             variant="outlined"
             sx={{
               width: '100%',
-              backgroundColor: role === 'student' ? 'primary.light' : '',
-              color: role === 'student' ? 'text.primary' : 'text.secondary'
+              backgroundColor: role === 'student' ? 'primary.main' : '',
+              color: role === 'student' ? 'white' : 'text.secondary',
+              ':hover': {
+                backgroundColor: role === 'student' ? 'primary.main' : 'primary.light'
+              }
             }}
             onClick={handleClickButton}
           >
@@ -103,8 +95,11 @@ const RegisterPage = () => {
             variant="outlined"
             sx={{
               width: '100%',
-              backgroundColor: role === 'professor' ? 'primary.light' : '',
-              color: role === 'professor' ? 'text.primary' : 'text.secondary'
+              backgroundColor: role === 'professor' ? 'primary.main' : '',
+              color: role === 'professor' ? 'white' : 'text.secondary',
+              ':hover': {
+                backgroundColor: role === 'professor' ? 'primary.main' : 'primary.light'
+              }
             }}
             onClick={handleClickButton}
           >
@@ -114,8 +109,12 @@ const RegisterPage = () => {
           </Button>
         </Stack>
         <Button
-          variant="outlined"
-          sx={{ width: '100%', height: 50, backgroundColor: 'primary.dark', color: 'primary.light' }}
+          variant="text"
+          sx={{
+            width: '100%',
+            color: COLORS.text,
+            height: 50
+          }}
           onClick={handleSubmit}
         >
           <Typography variant="body1" fontSize={18} fontWeight={800}>

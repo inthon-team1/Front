@@ -1,13 +1,9 @@
 import { Box, Button, Typography } from '@mui/material'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { ReactComponent as Logo } from '@assets/Logo.svg'
+import { useNavigate } from 'react-router-dom'
 import { useAuthUser, useSignOut } from 'react-auth-kit'
 import logoUrl from '@assets/Logo.svg'
 const Header = () => {
   const navigate = useNavigate()
-  const location = useLocation()
-  const main = location.pathname === '/'
-  const register = location.pathname === '/register'
   const authUser = useAuthUser()()
   const signOut = useSignOut()
   const handleSignOut = () => {
@@ -32,6 +28,9 @@ const Header = () => {
     >
       <Button sx={{ display: 'flex', alignItems: 'center' }} onClick={() => navigate('/')}>
         <img src={logoUrl} alt="logo" width="50" height="50" />
+        <Typography variant="h5" fontWeight={800} sx={{ marginLeft: 2, color: 'text.primary' }}>
+          ROICE
+        </Typography>
       </Button>
       {authUser && (
         <Button sx={{ display: 'flex', backgroundColor: '#59A7FF', color: 'white' }} onClick={handleSignOut}>

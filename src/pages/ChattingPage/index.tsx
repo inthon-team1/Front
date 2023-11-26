@@ -1,9 +1,12 @@
 import { Avatar, Box, Button, Grid, TextField, Typography } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAuthUser } from 'react-auth-kit'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { type Socket, io } from 'socket.io-client'
 import SendIcon from '@mui/icons-material/Send'
+import { useRecorder } from 'react-recorder-voice'
+import MicIcon from '@mui/icons-material/Mic'
+import axios from 'axios'
 interface TextResponse {
   id: number
   status: string
@@ -11,7 +14,7 @@ interface TextResponse {
 }
 const ChattingPage = () => {
   const authUser = useAuthUser()()
-  const { id } = useParams()
+  const { courseID, id } = useParams()
   const [outerSocket, setOuterSocket] = useState<Socket>()
   const [questionId, setQuestionId] = useState<number>(0)
   const sendQuestion = (question: string, lang: string = 'KR') => {
@@ -19,9 +22,31 @@ const ChattingPage = () => {
       outerSocket.emit('send-question', { question, lang })
     }
   }
+  const sendAnswerHandler = (file: File, questionId: number) => {
+    if (outerSocket) {
+      outerSocket.emit('send-answer', { file, questionId })
+    }
+  }
+  const { audioURL, audioData, timer, recordingStatus, cancelRecording, saveRecordedAudio, startRecording } =
+    useRecorder()
+  const navigate = useNavigate()
   // const [sendAnswerHandler, setSendAnswerHandler] = useState<(file: File, questionId: number) => any>()
   const [question, setQuestion] = useState('')
   const [textResponses, setTextResponses] = useState<TextResponse[]>([])
+  const [messages, setMessages] = useState()
+  const handleStudentSubmit = () => {
+    sendQuestion(question, 'KR')
+    setQuestion('')
+    setTextResponses(prev => [...prev, { id: questionId, status: 'sent', text: question }])
+  }
+  const handleProfessorSubmit = () => {
+    if (audioData) {
+      sendAnswerHandler(audioData, questionId)
+      // const formdata = new FormData()
+      // formdata.append('file', audioData)
+      // axios.post('https://api.inthon.devkor.club/aws', formdata)
+    }
+  }
   useEffect(() => {
     const socket = io(`${import.meta.env.VITE_SOCKET}/session`, {
       auth: {
@@ -40,6 +65,9 @@ const ChattingPage = () => {
 
     socket.on('session-disconnected', () => {
       alert('강의 종료')
+      socket.disconnect()
+      outerSocket?.disconnect()
+      navigate(`/course/${courseID}/${id}`)
     })
 
     socket.on('send-id', (questionId: number) => {
@@ -54,17 +82,14 @@ const ChattingPage = () => {
     // id = question id
     socket.on('receive-question', (data: { questionKR: string; id: number }) => {
       const newQeustion = { id: data.id, status: 'received', text: data.questionKR }
+      setQuestionId(data.id)
       setTextResponses(prev => [...prev, newQeustion])
     })
 
-    // send-answer
-    // setSendAnswerHandler(function (file: File, questionId: number) {
-    //   socket.emit('send-answer', { file, questionId })
-    // })
-
     // receive-answer
-    socket.on('receive-answer', (data: { answerKR: string; answerEN: string; fileSrc: string }) => {
-      console.log(data)
+    socket.on('receive-answer', (data: { id: number; answerKR: string; fileSrc: string }) => {
+      const newQeustion = { id: data.id, status: 'received', text: data.answerKR }
+      setTextResponses(prev => [...prev, newQeustion])
     })
 
     socket.on('connect', () => {
@@ -78,8 +103,9 @@ const ChattingPage = () => {
       socket.disconnect()
     }
   }, [])
+
   return (
-    <Box sx={{ width: '100%', paddingY: 5, paddingX: 50, display: 'flex', flexDirection: 'row' }}>
+    <Box sx={{ width: '100%', overflow: 'auto', paddingY: 5, paddingX: 50, display: 'flex', flexDirection: 'row' }}>
       <Box
         sx={{
           width: '100%',
@@ -91,8 +117,6 @@ const ChattingPage = () => {
           border: 1,
           borderRadius: 3,
           borderColor: 'rgba(0, 0, 0, 0.1)',
-          // backdropFilter: 'blur(16px) saturate(200%)',
-          // '::WebkitBackdrop': 'blur(16px) saturate(200%)',
           backgroundColor: '#D4E5EF',
           padding: 4,
           gap: 4
@@ -104,8 +128,7 @@ const ChattingPage = () => {
             height: 600,
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'flex-end',
-            // alignItems: 'flex-end',
+            overflow: 'auto',
             gap: 2
           }}
         >
@@ -147,29 +170,120 @@ const ChattingPage = () => {
             width: '100%'
           }}
         >
-          <TextField
-            variant="filled"
-            value={question}
-            onChange={e => setQuestion(e.target.value)}
-            placeholder="질문을 입력하세요."
-            sx={{ width: '80%' }}
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                sendQuestion(question, 'KR')
-                setQuestion('')
-                setTextResponses(prev => [...prev, { id: questionId, status: 'sent', text: question }])
-              }
-            }}
-          />
+          {authUser?.role === 'professor' && (
+            <Box
+              onClick={() => {
+                timer === 0 ? startRecording() : saveRecordedAudio()
+              }}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: 'primary.main',
+                ':hover': {
+                  backgroundColor: 'primary.dark',
+                  cursor: 'pointer'
+                }
+              }}
+            >
+              <MicIcon sx={{ width: 20, height: 20, color: 'white' }} />
+            </Box>
+          )}
+          {authUser?.role === 'professor' && (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 200,
+                height: '100%',
+                bgcolor: '#59A7FF',
+                borderRadius: 3
+              }}
+            >
+              <Typography variant="body1" color="text.primary">
+                {timer}
+              </Typography>
+            </Box>
+          )}
+          {authUser?.role === 'student' && (
+            <TextField
+              variant="outlined"
+              value={question}
+              onChange={e => setQuestion(e.target.value)}
+              placeholder="질문을 입력하세요."
+              sx={{
+                width: '80%',
+                borderRadius: 2,
+                backdropFilter: 'blur(16px) saturate(200%)',
+                '::WebkitBackdrop': 'blur(16px) saturate(200%)',
+                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                border: '1px solid rgba(255, 255, 255, 0.125)'
+              }}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && e.nativeEvent.isComposing === false) {
+                  sendQuestion(question, 'KR')
+                  setQuestion('')
+                  setTextResponses(prev => [...prev, { id: questionId, status: 'sent', text: question }])
+                }
+              }}
+            />
+            // ) : (
+            //   <Box
+            //     sx={{
+            //       display: 'flex',
+            //       flexDirection: 'row',
+            //       alignItems: 'center',
+            //       justifyContent: 'space-between',
+            //       width: '100%',
+            //       gap: 1
+            //     }}
+            //   >
+            //     <Box
+            //       onClick={startRecording}
+            //       sx={{
+            //         display: 'flex',
+            //         justifyContent: 'center',
+            //         alignItems: 'center',
+            //         width: 50,
+            //         height: 50,
+            //         borderRadius: 25,
+            //         backgroundColor: 'primary.main',
+            //         ':hover': {
+            //           backgroundColor: 'primary.dark',
+            //           cursor: 'pointer'
+            //         }
+            //       }}
+            //     >
+            //       <MicIcon sx={{ width: 20, height: 20, color: 'white' }} />
+            //     </Box>
+            //     <Box
+            //       sx={{
+            //         display: 'flex',
+            //         justifyContent: 'center',
+            //         alignItems: 'center',
+            //         width: 200,
+            //         height: '100%',
+            //         bgcolor: '#59A7FF',
+            //         borderRadius: 3
+            //       }}
+            //     >
+            //       <Typography variant="body1" color="text.primary">
+            //         {timer}
+            //       </Typography>
+            //     </Box>
+            //   </Box>
+          )}
           <Button
             variant="contained"
             color="primary"
             type="submit"
             sx={{ gap: 1, padding: 1, width: '10%' }}
             onClick={() => {
-              sendQuestion(question, 'KR')
-              setQuestion('')
-              setTextResponses(prev => [...prev, { id: questionId, status: 'sent', text: question }])
+              authUser?.role === 'student' ? handleStudentSubmit() : handleProfessorSubmit()
             }}
           >
             <SendIcon sx={{ color: 'white' }} />
@@ -180,20 +294,6 @@ const ChattingPage = () => {
         </Box>
       </Box>
     </Box>
-    // <>
-    //   <TextField
-    //     label="강의 이름"
-    //     variant="outlined"
-    //     value={question}
-    //     onChange={e => setQuestion(e.target.value)}
-    //     sx={{ marginBottom: 2, width: '500px' }}
-    //     required
-    //     // onSubmit={() => sendQuestionHandler(question, 'KR')}
-    //   />
-    //   <Button variant="contained" color="primary" type="submit" onClick={() => sendQuestion(question, 'KR')}>
-    //     등록
-    //   </Button>
-    // </>
   )
 }
 
