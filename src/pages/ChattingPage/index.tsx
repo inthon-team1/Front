@@ -88,7 +88,7 @@ const ChattingPage = () => {
 
     // receive-answer
     socket.on('receive-answer', (data: { id: number; answerKR: string; fileSrc: string }) => {
-      const newQeustion = { id: data.id, status: 'received', text: data.answerKR }
+      const newQeustion = { id: data.id, status: authUser?.id === 'student' ? 'received' : 'sent', text: data.answerKR }
       setTextResponses(prev => [...prev, newQeustion])
     })
 

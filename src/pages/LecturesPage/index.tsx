@@ -11,10 +11,10 @@ const LecturesPage: React.FC = () => {
   const authUser = useAuthUser()()
   const role = authUser?.role
   const courses = data?.lectures ?? []
+  console.log(courses)
   const handleCourseClick = (courseID: string, id: string) => {
     navigate(`/course/${courseID}/${id}`)
   }
-
   return (
     <Grid
       container
@@ -79,7 +79,7 @@ const LecturesPage: React.FC = () => {
       >
         {courses.map(course => (
           <Box
-            key={course.courseID}
+            key={course.id}
             sx={{
               width: '80%',
               marginBottom: 1,

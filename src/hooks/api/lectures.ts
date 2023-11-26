@@ -17,7 +17,7 @@ export const useGetLectures = () => {
   const { enqueueSnackbar } = useSnackbar()
   const token = useAuthHeader()()
 
-  return useQuery(['lecture'], () => getLecturesAPICall(token), {
+  return useQuery(['lectures'], () => getLecturesAPICall(token), {
     onError: err => {
       if (err instanceof AxiosError) {
         enqueueSnackbar(COMMON_MESSAGE.LOAD_FAIL, { variant: 'error' })
@@ -42,7 +42,7 @@ export const useCreateLecture = (values: KoreanLecture) => {
   return useMutation(['lecture'], () => createLectureAPICall(token, values), {
     onSuccess: () => {
       enqueueSnackbar(LECTURE_MESSAGE.SUCCESS, { variant: 'success' })
-      queryClient.invalidateQueries('lecture')
+      queryClient.invalidateQueries('lectures')
     },
     onError: err => {
       if (err instanceof AxiosError) {
@@ -50,6 +50,9 @@ export const useCreateLecture = (values: KoreanLecture) => {
         return
       }
       enqueueSnackbar(COMMON_MESSAGE.UNKNOWN_ERROR, { variant: 'error' })
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries('lectures')
     }
   })
 }
